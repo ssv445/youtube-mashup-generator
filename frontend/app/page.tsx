@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import ProjectSelector from "@/components/ProjectSelector";
 import SegmentList from "@/components/SegmentList";
 import PreviewPlayer from "@/components/PreviewPlayer";
@@ -10,6 +11,8 @@ import { loadProjects, saveProjects, createNewProject } from "@/lib/localStorage
 import { validateAllSegments } from "@/lib/validation";
 
 export default function Home() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [projects, setProjects] = useState<Project[]>([]);
   const [currentProjectId, setCurrentProjectId] = useState<string | null>(null);
   const [segments, setSegments] = useState<Segment[]>([]);
@@ -26,14 +29,23 @@ export default function Home() {
 
     setProjects(sortedProjects);
 
-    if (sortedProjects.length > 0) {
+    // Check URL for project ID
+    const urlProjectId = searchParams.get('project');
+
+    if (urlProjectId && sortedProjects.find(p => p.id === urlProjectId)) {
+      // Use project from URL if it exists
+      setCurrentProjectId(urlProjectId);
+    } else if (sortedProjects.length > 0) {
       // Automatically select the most recently updated project
-      setCurrentProjectId(sortedProjects[0].id);
+      const projectId = sortedProjects[0].id;
+      setCurrentProjectId(projectId);
+      router.replace(`/?project=${projectId}`);
     } else {
       // Create a new project with random name if none exist
       const newProject = createNewProject();
       setProjects([newProject]);
       setCurrentProjectId(newProject.id);
+      router.replace(`/?project=${newProject.id}`);
     }
   }, []);
 
@@ -60,6 +72,7 @@ export default function Home() {
   const handleProjectChange = (projectId: string) => {
     setCurrentProjectId(projectId);
     setCurrentSegmentIndex(0);
+    router.push(`/?project=${projectId}`);
   };
 
   const handleProjectCreate = () => {
@@ -68,6 +81,7 @@ export default function Home() {
     setProjects(updatedProjects);
     setCurrentProjectId(newProject.id);
     saveProjects(updatedProjects);
+    router.push(`/?project=${newProject.id}`);
   };
 
   const handleProjectRename = (projectId: string, newName: string) => {
@@ -85,11 +99,14 @@ export default function Home() {
 
     if (projectId === currentProjectId) {
       if (updatedProjects.length > 0) {
-        setCurrentProjectId(updatedProjects[0].id);
+        const newProjectId = updatedProjects[0].id;
+        setCurrentProjectId(newProjectId);
+        router.push(`/?project=${newProjectId}`);
       } else {
         const newProject = createNewProject();
         setProjects([newProject]);
         setCurrentProjectId(newProject.id);
+        router.push(`/?project=${newProject.id}`);
       }
     }
   };
@@ -108,6 +125,7 @@ export default function Home() {
       setProjects(updatedProjects);
       saveProjects(updatedProjects);
       setCurrentProjectId(duplicatedProject.id);
+      router.push(`/?project=${duplicatedProject.id}`);
     }
   };
 
