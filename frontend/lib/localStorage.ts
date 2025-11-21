@@ -49,11 +49,25 @@ export function saveProjects(projects: Project[]): void {
   }
 }
 
+const adjectives = [
+  "Epic", "Funky", "Crazy", "Wild", "Cool", "Awesome", "Groovy", "Stellar",
+  "Radical", "Legendary", "Blazing", "Thunder", "Mega", "Super", "Ultimate"
+];
+
+const nouns = [
+  "Parody", "Remix", "Mashup", "Mix", "Compilation", "Medley", "Jam",
+  "Collection", "Blend", "Fusion", "Creation", "Production"
+];
+
+function getRandomElement<T>(array: T[]): T {
+  return array[Math.floor(Math.random() * array.length)];
+}
+
 export function createNewProject(): Project {
-  const timestamp = Date.now();
+  const randomName = `${getRandomElement(adjectives)} ${getRandomElement(nouns)}`;
   return {
     id: crypto.randomUUID(),
-    name: `Parody ${timestamp}`,
+    name: randomName,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     segments: [],

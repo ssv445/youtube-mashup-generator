@@ -14,16 +14,23 @@ export default function Home() {
   const [currentProjectId, setCurrentProjectId] = useState<string | null>(null);
   const [segments, setSegments] = useState<Segment[]>([]);
   const [currentSegmentIndex, setCurrentSegmentIndex] = useState<number>(0);
-  const [showContinuePrompt, setShowContinuePrompt] = useState(false);
 
   // Load projects on mount
   useEffect(() => {
     const loadedProjects = loadProjects();
-    setProjects(loadedProjects);
 
-    if (loadedProjects.length > 0) {
-      setShowContinuePrompt(true);
+    // Sort projects by most recently updated
+    const sortedProjects = loadedProjects.sort((a, b) =>
+      new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+    );
+
+    setProjects(sortedProjects);
+
+    if (sortedProjects.length > 0) {
+      // Automatically select the most recently updated project
+      setCurrentProjectId(sortedProjects[0].id);
     } else {
+      // Create a new project with random name if none exist
       const newProject = createNewProject();
       setProjects([newProject]);
       setCurrentProjectId(newProject.id);
@@ -104,49 +111,8 @@ export default function Home() {
     }
   };
 
-  const handleContinuePrevious = () => {
-    setCurrentProjectId(projects[0].id);
-    setShowContinuePrompt(false);
-  };
-
-  const handleStartNew = () => {
-    const newProject = createNewProject();
-    const updatedProjects = [...projects, newProject];
-    setProjects(updatedProjects);
-    setCurrentProjectId(newProject.id);
-    saveProjects(updatedProjects);
-    setShowContinuePrompt(false);
-  };
-
   const validationResult = validateAllSegments(segments);
   const isValid = validationResult.isValid;
-
-  if (showContinuePrompt) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-          <h2 className="text-2xl font-bold mb-4">Welcome Back!</h2>
-          <p className="text-gray-600 mb-6">
-            You have a previous project. Would you like to continue or start a new one?
-          </p>
-          <div className="flex gap-4">
-            <button
-              onClick={handleContinuePrevious}
-              className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Continue Previous
-            </button>
-            <button
-              onClick={handleStartNew}
-              className="flex-1 bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300 transition-colors"
-            >
-              Start New
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
