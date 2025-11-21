@@ -54,7 +54,17 @@ export default function PreviewPlayer({
   // Initialize player when API is ready and we have segments
   useEffect(() => {
     if (isReady && currentSegment) {
+      const wasPlaying = isPlaying;
       initPlayer();
+
+      // If we were playing before, auto-play the new segment
+      if (wasPlaying && playerRef.current) {
+        setTimeout(() => {
+          if (playerRef.current && playerRef.current.playVideo) {
+            playerRef.current.playVideo();
+          }
+        }, 1000);
+      }
     }
   }, [isReady, currentSegmentIndex, segments.length]);
 
@@ -141,12 +151,19 @@ export default function PreviewPlayer({
         if (currentSegment) {
           const endTime = timeToSeconds(currentSegment.endTime);
           if (time >= endTime) {
-            playerRef.current.pauseVideo();
+            // Stop time tracking before advancing
+            stopTimeTracking();
+
             // Auto-advance to next segment
             if (currentSegmentIndex < segments.length - 1) {
-              setTimeout(() => {
-                onSegmentChange(currentSegmentIndex + 1);
-              }, 500);
+              console.log('Auto-advancing to next segment');
+              onSegmentChange(currentSegmentIndex + 1);
+            } else {
+              // Last segment, just pause
+              if (playerRef.current && playerRef.current.pauseVideo) {
+                playerRef.current.pauseVideo();
+              }
+              setIsPlaying(false);
             }
           }
         }
