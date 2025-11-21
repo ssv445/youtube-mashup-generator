@@ -1,33 +1,238 @@
-YT Video Stitcheryt-video-stitcher is a command-line tool built with Node.js to download YouTube videos, cut specific segments, and merge them into a single output file. It intelligently caches original full video downloads by their YouTube ID to avoid re-downloading, and aims to download videos at 720p resolution where available.FeaturesDownload YouTube Videos: Fetches videos from YouTube, targeting 720p resolution.Persistent Caching: Stores full downloaded videos in a local cache directory (default: .youtube_cache) using the YouTube video ID as the filename (e.g., VIDEO_ID.mp4). This prevents re-downloading the same video.Segment Cutting: Extracts specific segments from videos based on start and end timestamps.Merge Segments: Joins all extracted segments into a single output video file.Input via JSON: Define video URLs and their segments in a simple JSON file.Configurable Directories: Specify custom directories for caching and temporary files.PrerequisitesBefore you can use yt-video-stitcher, you need to have the following software installed on your system:Node.js and npm:Node.js (version 16 or newer is recommended). npm (Node Package Manager) comes bundled with Node.js.Download and install from nodejs.org.FFmpeg:FFmpeg is a powerful multimedia framework required for video cutting and joining.Windows:Download the latest static build from FFmpeg Builds (e.g., ffmpeg-release-full.7z).Extract the archive (e.g., using 7-Zip).Navigate to the bin directory inside the extracted folder (it contains ffmpeg.exe, ffprobe.exe, etc.).Add this bin directory to your system's PATH environment variable.macOS:Using Homebrew (recommended):brew install ffmpeg
-Linux (Debian/Ubuntu):sudo apt update
-sudo apt install ffmpeg
-Verify Installation: Open a new terminal or command prompt and type:ffmpeg -version
-You should see FFmpeg version information.yt-dlp:yt-dlp is a fork of youtube-dl with additional features and fixes, used for downloading YouTube videos.While the youtube-dl-exec library used by this tool can often download yt-dlp automatically, having it installed system-wide is a good fallback and useful for direct command-line use.Recommended Installation (ensures you get the latest version):Windows (using pip, if Python is installed):pip install -U yt-dlp
-Or download yt-dlp.exe from the yt-dlp GitHub Releases page and place it in a directory included in your system's PATH.macOS (using Homebrew):brew install yt-dlp
-Linux (using pip or package manager):pip3 install -U yt-dlp
-Or, for some distributions:sudo apt install yt-dlp # (May not always be the latest)
-Alternatively, download the binary directly:sudo wget [https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp](https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp) -O /usr/local/bin/yt-dlp
-sudo chmod a+rx /usr/local/bin/yt-dlp
-Verify Installation: Open a new terminal or command prompt and type:yt-dlp --version
-You should see the yt-dlp version.Installation of yt-video-stitcherClone or Download the Repository:If this tool is in a Git repository, clone it. Otherwise, download the video-processor.js and package.json files into a directory.Install Dependencies:Navigate to the directory where you saved video-processor.js and package.json, then run:npm install
-This will install the necessary Node.js packages listed in package.json (like yargs, fluent-ffmpeg, fs-extra, youtube-dl-exec).Make the script executable (Linux/macOS):chmod +x video-processor.js
-UsagePrepare your Input JSON File:Create a JSON file (e.g., videos.json) that lists the YouTube videos you want to process and the segments to cut. Each object in the array should have url, startTime, and endTime.Example input.json:[
-{
-"url": "[https://www.youtube.com/watch?v=FZLadzn5i6Q](https://www.youtube.com/watch?v=FZLadzn5i6Q)",
-"startTime": "00:00:00",
-"endTime": "00:01:09"
-},
-{
-"url": "[https://www.youtube.com/watch?v=P1fIdFRnfqw](https://www.youtube.com/watch?v=P1fIdFRnfqw)",
-"startTime": "00:00:18",
-"endTime": "00:01:12"
-},
-{
-"url": "[https://www.youtube.com/watch?v=xfMN4SpIxIA](https://www.youtube.com/watch?v=xfMN4SpIxIA)",
-"startTime": "00:00:00",
-"endTime": "00:00:52"
-}
-]
-url: The full URL of the YouTube video.startTime: The start time of the segment in HH:MM:SS or MM:SS or SS format.endTime: The end time of the segment in HH:MM:SS or MM:SS or SS format.Run the Command:Execute the script from your terminal:./video-processor.js --input <path_to_your_input.json> --output <desired_output_video_name.mp4>
-Example:./video-processor.js --input videos.json --output final_compilation.mp4
-Command-Line Options--input, -i: (Required) Path to the JSON file describing videos and segments.--output, -o: (Required) Path for the final merged video output file.--cache-dir, -c: Directory to store original downloaded YouTube videos.Default: ./.youtube_cache (relative to where the command is run)--temp-dir, -t: Directory for temporary video segments (will be cleared after successful completion unless --verbose is used).Default: `./.temp_segments
+# YouTube Parody Song Generator 🎵
+
+A web application that lets you create parody songs by stitching together segments from multiple YouTube videos. Features real-time preview, drag-and-drop segment reordering, and audio-only output generation.
+
+## Features
+
+- 🎬 **Add YouTube Videos**: Paste URLs one at a time with thumbnail previews
+- ⏱️ **Precise Time Control**: Set start/end times manually or with visual controls
+- 👀 **Real-Time Preview**: Watch your parody come together using YouTube's player
+- 🔄 **Drag & Drop**: Easily reorder segments
+- 💾 **Multi-Project Support**: Save and manage multiple parody projects locally
+- ✅ **Client-Side Validation**: Real-time validation ensures everything is correct
+- 🎵 **Audio Generation**: Generate and download audio-only files
+- 🐳 **Docker-Based**: FFmpeg and yt-dlp run in containers (no local installation needed)
+
+## Architecture
+
+- **Frontend**: Next.js 15 with React, Tailwind CSS, YouTube IFrame API
+- **Backend**: Express.js API server with Docker integration
+- **Processing**: FFmpeg and yt-dlp running in Docker containers
+
+## Prerequisites
+
+- **Node.js**: v16 or newer
+- **Docker**: With Docker Compose support
+- **npm**: Comes with Node.js
+
+## Installation
+
+1. **Clone the repository** (or you're already here!)
+
+2. **Install all dependencies**:
+   ```bash
+   npm run install:all
+   ```
+
+   This will install dependencies for:
+   - Root package (concurrently)
+   - Frontend (Next.js + React + dependencies)
+   - Backend (Express + dependencies)
+
+3. **Start Docker containers**:
+   ```bash
+   npm run docker:up
+   ```
+
+   Or manually:
+   ```bash
+   docker compose up -d
+   ```
+
+## Development
+
+Start both frontend and backend servers:
+
+```bash
+npm run dev
+```
+
+This will:
+- Start Next.js frontend on http://localhost:3031
+- Start Express backend on http://localhost:3032
+- Ensure Docker containers are running
+
+### Individual Services
+
+```bash
+# Frontend only
+npm run dev:frontend
+
+# Backend only
+npm run dev:backend
+
+# Docker containers
+npm run docker:up
+npm run docker:down
+npm run docker:logs
+```
+
+## Usage
+
+1. **Open the app**: Navigate to http://localhost:3031
+
+2. **Add YouTube videos**:
+   - Paste a YouTube URL
+   - Click "Add" or press Enter
+   - Set start and end times for each segment
+
+3. **Preview your parody**:
+   - Click on any segment to preview it
+   - Use "Play All Segments" to watch the full sequence
+   - Segments auto-advance when they finish
+
+4. **Reorder segments**:
+   - Drag and drop segments to rearrange them
+
+5. **Generate audio**:
+   - Once all segments are verified and valid
+   - Click "Generate & Download"
+   - Wait for processing (progress shown)
+   - Audio file downloads automatically
+
+6. **Manage projects**:
+   - Use the project selector dropdown
+   - Create new projects
+   - Rename, duplicate, or delete projects
+   - All saved locally in your browser
+
+## Validation Rules
+
+- **Segments**: Minimum 1, maximum 10
+- **Duration**: Total must be ≤ 20 minutes
+- **Time Format**: HH:MM:SS, MM:SS, or SS
+- **Segment Length**: Minimum 1 second
+- **Verification**: All segments must play successfully in preview
+
+## File Structure
+
+```
+video-gen/
+├── frontend/                 # Next.js application
+│   ├── app/                 # Next.js app directory
+│   ├── components/          # React components
+│   └── lib/                 # Utilities and types
+├── backend/                 # Express API server
+│   ├── routes/             # API endpoints
+│   ├── services/           # Business logic
+│   └── utils/              # Helper functions
+├── media/                   # Shared media directory
+│   ├── .youtube_cache/     # Downloaded videos
+│   ├── .temp_segments/     # Temporary audio segments
+│   └── output/             # Generated audio files
+├── docker-compose.yml       # Docker services config
+└── package.json            # Root scripts
+```
+
+## API Endpoints
+
+### Backend API (http://localhost:3032)
+
+- `POST /api/generate` - Generate audio from segments
+- `GET /api/status` - Check API and Docker status
+- `GET /health` - Health check
+
+## Environment Variables
+
+Create `.env.local` in the frontend directory (optional):
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3032
+```
+
+## Troubleshooting
+
+### Docker containers not running
+
+```bash
+npm run docker:up
+```
+
+Check status:
+```bash
+docker compose ps
+```
+
+### Port already in use
+
+- Frontend (3000): Stop other Next.js apps or change port in `frontend/package.json`
+- Backend (3001): Change `PORT` in `backend/server.js`
+
+### Generation fails
+
+1. Check Docker containers are running:
+   ```bash
+   docker compose ps
+   ```
+
+2. Check Docker logs:
+   ```bash
+   npm run docker:logs
+   ```
+
+3. Verify media directories exist:
+   ```bash
+   ls -la media/
+   ```
+
+### Videos won't download
+
+- Check internet connection
+- Verify YouTube URL is correct
+- Some videos may be region-locked or private
+
+## Output Format
+
+- **Container**: MP4 (M4A)
+- **Audio Codec**: AAC
+- **Quality**: Extracted from 360p YouTube videos
+- **Filename**: `parody_[timestamp].m4a`
+
+## Cleanup
+
+Generated audio files are automatically deleted after 24 hours. To manually clean up:
+
+```bash
+rm -rf media/output/*
+rm -rf media/.temp_segments/*
+```
+
+Cache is persistent (speeds up re-using same videos):
+```bash
+# Only if you want to clear cache
+rm -rf media/.youtube_cache/*
+```
+
+## Future Enhancements
+
+- Higher quality options (720p, 1080p)
+- Video output with visualizations
+- Fade transitions between segments
+- Volume adjustment per segment
+- User accounts with cloud storage
+- Share parodies via URL
+
+## Tech Stack
+
+- **Frontend**: Next.js 15, React 19, Tailwind CSS, YouTube IFrame API, @dnd-kit
+- **Backend**: Express.js, Node.js
+- **Processing**: FFmpeg, yt-dlp (in Docker)
+- **Storage**: Local Storage API (browser), File system (server)
+
+## License
+
+ISC
+
+## Credits
+
+Built with Claude Code following the spec.md requirements.

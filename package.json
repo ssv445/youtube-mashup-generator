@@ -1,13 +1,27 @@
 {
-    "name": "yt-video-stitcher",
-    "version": "1.0.0",
-    "description": "Downloads, cuts, and joins YouTube video segments.",
+    "name": "parody-song-generator",
+    "version": "2.0.0",
+    "description": "Web app to create parody songs from YouTube video segments",
     "main": "video-processor.js",
     "bin": {
         "yt-stitch": "./video-processor.js"
     },
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "dev": "npm run kill:ports && npm run docker:up && concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+        "dev:clean": "./start.sh",
+        "dev:frontend": "cd frontend && npm run dev",
+        "dev:backend": "cd backend && npm run dev",
+        "kill:ports": "lsof -ti:3031 | xargs kill -9 2>/dev/null || true && lsof -ti:3032 | xargs kill -9 2>/dev/null || true",
+        "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+        "build": "cd frontend && npm run build",
+        "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
+        "start:frontend": "cd frontend && npm start",
+        "start:backend": "cd backend && npm start",
+        "docker:up": "docker compose up -d",
+        "docker:down": "docker compose down",
+        "docker:logs": "docker compose logs -f",
+        "test:backend": "curl -s http://localhost:3032/health | json_pp",
+        "test:frontend": "curl -s -o /dev/null -w '%{http_code}' http://localhost:3031"
     },
     "keywords": [
         "youtube",
@@ -19,6 +33,7 @@
     "author": "Your Name",
     "license": "ISC",
     "dependencies": {
+        "concurrently": "^9.2.1",
         "fluent-ffmpeg": "^2.1.2",
         "fs-extra": "^11.2.0",
         "yargs": "^17.7.2",
