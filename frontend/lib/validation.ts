@@ -42,11 +42,6 @@ export function validateSegment(segment: Segment): string[] {
     }
   }
 
-  // Check if verified
-  if (!segment.verified) {
-    errors.push("Segment not verified. Please play it in the preview");
-  }
-
   return errors;
 }
 

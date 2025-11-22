@@ -132,8 +132,6 @@ export default function SegmentCard({
             ? "border-blue-400 shadow-md"
             : hasErrors
             ? "border-red-300"
-            : segment.verified
-            ? "border-green-300 bg-green-50"
             : "border-gray-200"
         } p-2 sm:p-3 cursor-pointer hover:shadow-sm min-w-[280px] sm:min-w-[380px]`}
         onClick={onClick}
@@ -170,11 +168,8 @@ export default function SegmentCard({
                 placeholder="Song title..."
               />
             </div>
-            <div className="text-[10px] sm:text-xs text-gray-500 flex flex-wrap items-center gap-x-2">
-              <span>Duration: {formatDuration(duration)}</span>
-              {segment.verified && (
-                <span className="px-1.5 sm:px-2 py-0.5 bg-green-600 text-white text-[9px] sm:text-[10px] rounded font-medium">✓ Verified</span>
-              )}
+            <div className="text-[10px] sm:text-xs text-gray-500">
+              Duration: {formatDuration(duration)}
             </div>
           </div>
 
