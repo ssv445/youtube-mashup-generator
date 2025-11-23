@@ -1,23 +1,54 @@
 # YouTube Mashup Generator 🎵
 
-A web application that lets you create audio mashups by stitching together segments from multiple YouTube videos. Features real-time preview, drag-and-drop segment reordering, and audio-only output generation.
+A web application that lets you create custom audio mashups by combining specific time segments from multiple YouTube videos. Perfect for creating song compilations, medleys, or creative audio remixes. Features real-time preview with YouTube's player, intuitive drag-and-drop reordering, and high-quality audio-only downloads.
+
+## Quick Links
+
+- [Features](#features) | [How It Works](#how-it-works) | [Installation](#installation) | [Usage](#usage)
+- [Validation Rules](#validation-rules) | [Troubleshooting](#troubleshooting) | [Use Cases](#use-cases)
 
 ## Features
 
-- 🎬 **Add YouTube Videos**: Paste URLs one at a time with thumbnail previews
-- ⏱️ **Precise Time Control**: Set start/end times manually or with visual controls
-- 👀 **Real-Time Preview**: Watch your mashup come together using YouTube's player
-- 🔄 **Drag & Drop**: Easily reorder segments
-- 💾 **Multi-Project Support**: Save and manage multiple mashup projects locally
-- ✅ **Client-Side Validation**: Real-time validation ensures everything is correct
-- 🎵 **Audio Generation**: Generate and download audio-only files
-- 🐳 **Docker-Based**: FFmpeg and yt-dlp run in containers (no local installation needed)
+- 🎬 **Add YouTube Videos**: Paste any YouTube URL and extract specific time segments
+- ⏱️ **Precise Time Control**: Set start/end times in HH:MM:SS format with visual player controls
+- 👀 **Real-Time Preview**: Watch and hear exactly how your mashup will sound before generating
+- 🔄 **Drag & Drop Reordering**: Easily rearrange segments to perfect your mashup sequence
+- 📥 **Import/Export**: Load example mashups or import your own segment configurations as JSON
+- 💾 **Multi-Project Support**: Save and manage unlimited mashup projects in your browser
+- ✅ **Smart Validation**: Real-time checks ensure all segments are valid before generation
+- 🎵 **High-Quality Audio**: Downloads 360p YouTube videos and extracts AAC audio segments
+- 🔗 **Seamless Merging**: Automatically concatenates all segments into a single audio file
+- 🐳 **Docker-Based Processing**: FFmpeg and yt-dlp run in containers (no local installation needed)
+
+## How It Works
+
+1. **Frontend (Browser)**:
+   - Next.js app with YouTube IFrame player for real-time preview
+   - Projects and segments stored in browser's local storage
+   - Visual controls for selecting video segments
+   - Export/Import functionality for sharing configurations
+
+2. **Backend (Node.js API)**:
+   - Express.js server handles generation requests
+   - Coordinates Docker containers for video processing
+   - Manages temporary files and cleanup
+
+3. **Processing (Docker)**:
+   - **yt-dlp**: Downloads YouTube videos at 360p quality (includes audio)
+   - **FFmpeg**: Extracts audio segments and merges them seamlessly
+   - Videos are cached to speed up repeated use of the same source
+
+4. **Workflow**:
+   ```
+   YouTube URLs → Download Videos → Extract Audio Segments → Merge → Download .m4a
+   ```
 
 ## Architecture
 
-- **Frontend**: Next.js 15 with React, Tailwind CSS, YouTube IFrame API
+- **Frontend**: Next.js 15, React 19, Tailwind CSS, YouTube IFrame API
 - **Backend**: Express.js API server with Docker integration
-- **Processing**: FFmpeg and yt-dlp running in Docker containers
+- **Processing**: FFmpeg and yt-dlp in isolated Docker containers
+- **Storage**: Browser LocalStorage (projects) + File system (media cache)
 
 ## Prerequisites
 
@@ -79,40 +110,61 @@ npm run docker:logs
 
 ## Usage
 
-1. **Open the app**: Navigate to http://localhost:3031
+### Quick Start with Example
 
-2. **Add YouTube videos**:
-   - Paste a YouTube URL
+1. **Open the app**: Navigate to http://localhost:3031
+2. **Import Example**: Click "Import Example Mashup" to load 7 pre-configured music segments
+3. **Preview**: Click "Play All Segments" to hear the mashup
+4. **Generate**: Click "Generate & Download" to create your audio file
+
+### Creating Your Own Mashup
+
+1. **Add YouTube videos**:
+   - Paste any YouTube URL (e.g., `https://www.youtube.com/watch?v=VIDEO_ID`)
    - Click "Add" or press Enter
-   - Set start and end times for each segment
+   - Video thumbnail and title will appear
+
+2. **Set time ranges**:
+   - Enter start time (e.g., `00:00:30` for 30 seconds)
+   - Enter end time (e.g., `00:01:15` for 1 minute 15 seconds)
+   - Or use the player controls to set times visually
 
 3. **Preview your mashup**:
-   - Click on any segment to preview it
-   - Use "Play All Segments" to watch the full sequence
-   - Segments auto-advance when they finish
+   - Click on any segment to preview that specific part
+   - Click "Play All Segments" to watch the full sequence
+   - Segments automatically advance to the next one
 
 4. **Reorder segments**:
-   - Drag and drop segments to rearrange them
+   - Drag and drop segment cards to rearrange them
+   - Your mashup will play in the new order
 
-5. **Generate audio**:
-   - Once all segments are verified and valid
-   - Click "Generate & Download"
-   - Wait for processing (progress shown)
-   - Audio file downloads automatically
+5. **Generate audio file**:
+   - The "Generate & Download" button activates when all segments are valid
+   - Click to start processing (takes 1-2 minutes depending on total length)
+   - Progress is shown during download, cutting, and merging
+   - Audio file (`mashup_[timestamp].m4a`) downloads automatically when ready
 
 6. **Manage projects**:
-   - Use the project selector dropdown
-   - Create new projects
+   - Use the project dropdown to switch between mashups
+   - Create new projects with the "+" button
    - Rename, duplicate, or delete projects
-   - All saved locally in your browser
+   - All projects auto-save to your browser's local storage
+   - Export segments as JSON for backup or sharing
+   - Import JSON files to load saved configurations
 
 ## Validation Rules
 
-- **Segments**: Minimum 1, maximum 10
-- **Duration**: Total must be ≤ 20 minutes
-- **Time Format**: HH:MM:SS, MM:SS, or SS
-- **Segment Length**: Minimum 1 second
-- **Verification**: All segments must play successfully in preview
+The app enforces the following rules to ensure successful mashup generation:
+
+- **Segment Count**: Minimum 1 segment, maximum 10 segments per mashup
+- **Total Duration**: Combined length of all segments must be ≤ 20 minutes
+- **Time Format**: Supports `HH:MM:SS`, `MM:SS`, or `SS` (e.g., `01:30:45`, `90:45`, or `30`)
+- **Segment Length**: Each segment must be at least 1 second long
+- **Time Logic**: Start time must be before end time for each segment
+- **URL Format**: Must be a valid YouTube URL (supports `youtube.com/watch?v=` and `youtu.be/` formats)
+- **Preview Verification**: All segments should play successfully in the preview player
+
+The "Generate & Download" button is disabled until all validation rules pass.
 
 ## File Structure
 
@@ -193,10 +245,16 @@ docker compose ps
 
 ## Output Format
 
-- **Container**: MP4 (M4A)
-- **Audio Codec**: AAC
-- **Quality**: Extracted from 360p YouTube videos
-- **Filename**: `mashup_[timestamp].m4a`
+Your generated mashup will be downloaded as:
+
+- **Format**: M4A (MPEG-4 Audio)
+- **Audio Codec**: AAC (Advanced Audio Coding)
+- **Source Quality**: Extracted from 360p YouTube videos (format 18)
+- **Bitrate**: Depends on source video quality
+- **Filename**: `mashup_[timestamp].m4a` (e.g., `mashup_1700000000000.m4a`)
+- **Compatibility**: Plays on all modern devices and media players
+
+The audio is extracted using FFmpeg's `-c copy` method, which preserves the original quality without re-encoding.
 
 ## Cleanup
 
@@ -213,14 +271,26 @@ Cache is persistent (speeds up re-using same videos):
 rm -rf media/.youtube_cache/*
 ```
 
+## Use Cases
+
+- **Music Mashups**: Combine choruses from different songs
+- **Medleys**: Create smooth transitions between your favorite tracks
+- **Compilations**: Build "best of" collections from music videos
+- **Creative Remixes**: Mix and match segments for unique compositions
+- **Study/Practice**: Extract and loop specific musical passages
+- **Entertainment**: Create humorous or themed audio compilations
+
 ## Future Enhancements
 
-- Higher quality options (720p, 1080p)
+- Higher quality audio extraction (720p, 1080p sources)
 - Video output with visualizations
-- Fade transitions between segments
-- Volume adjustment per segment
+- Audio crossfade transitions between segments
+- Volume normalization and adjustment per segment
+- Audio effects (reverb, echo, pitch shift)
 - User accounts with cloud storage
-- Share mashups via URL
+- Share mashups via public URLs
+- Collaborative editing
+- Template library with pre-made mashup ideas
 
 ## Tech Stack
 
@@ -233,6 +303,44 @@ rm -rf media/.youtube_cache/*
 
 ISC
 
+## JSON Import/Export Format
+
+You can export and import mashup configurations using JSON files. Here's the format:
+
+```json
+[
+  {
+    "url": "https://www.youtube.com/watch?v=VIDEO_ID",
+    "startTime": "00:00:19",
+    "endTime": "00:01:40"
+  },
+  {
+    "url": "https://youtu.be/VIDEO_ID",
+    "startTime": "00:01:30",
+    "endTime": "00:01:56"
+  }
+]
+```
+
+Each segment requires:
+- `url`: Full YouTube URL (any format)
+- `startTime`: Start timestamp in HH:MM:SS format
+- `endTime`: End timestamp in HH:MM:SS format
+
+See `example_mashup.json` for a complete example with 7 music segments.
+
 ## Credits
 
-Built with Claude Code following the spec.md requirements.
+Built with Claude Code following modern web development best practices.
+
+## Contributing
+
+Feel free to open issues or submit pull requests for bug fixes, feature requests, or improvements!
+
+## Support
+
+If you encounter any issues:
+1. Check the [Troubleshooting](#troubleshooting) section
+2. Review Docker container logs: `npm run docker:logs`
+3. Verify all prerequisites are installed correctly
+4. Open an issue on GitHub with details about your environment
