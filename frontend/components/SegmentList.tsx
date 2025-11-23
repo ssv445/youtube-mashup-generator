@@ -187,7 +187,7 @@ export default function SegmentList({
           ) : (
             <div
               ref={scrollContainerRef}
-              className="flex gap-2 sm:gap-3 overflow-x-auto pb-2 scrollbar-thin"
+              className="flex flex-col md:flex-row gap-2 sm:gap-3 md:overflow-x-auto pb-2 scrollbar-thin"
             >
               {segments.map((segment, index) => (
                 <div
@@ -195,6 +195,7 @@ export default function SegmentList({
                   ref={(el) => {
                     segmentRefs.current[index] = el;
                   }}
+                  className="md:flex-shrink-0"
                 >
                   <SegmentCard
                     segment={segment}
@@ -220,19 +221,19 @@ export default function SegmentList({
           <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
             Add YouTube Video
           </label>
-          <div className="flex flex-col sm:flex-row gap-2">
+          <div className="flex gap-2">
             <input
               type="text"
               value={urlInput}
               onChange={(e) => setUrlInput(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="https://www.youtube.com/watch?v=..."
-              className="flex-1 px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="YouTube URL..."
+              className="flex-1 min-w-0 px-2 sm:px-3 py-2 text-xs sm:text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <button
               onClick={handleAddVideo}
               disabled={isLoadingTitle}
-              className="px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+              className="px-3 sm:px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap flex-shrink-0"
             >
               {isLoadingTitle ? "Loading..." : "Add"}
             </button>

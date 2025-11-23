@@ -161,11 +161,10 @@ export default function VideoPlayer({
   return (
     <div
       ref={containerRef}
+      className="w-full bg-black rounded-lg overflow-hidden"
       style={{
-        width: '100%',
         aspectRatio: '16/9',
-        maxHeight: '400px',
-        backgroundColor: '#000'
+        maxHeight: '40vh',
       }}
     />
   );

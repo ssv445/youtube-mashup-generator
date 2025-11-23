@@ -244,20 +244,21 @@ function HomeContent() {
       {/* Header */}
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-[1600px] mx-auto px-3 sm:px-4 py-3 sm:py-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-lg sm:text-2xl font-bold text-gray-900">
-              YouTube Mashup Generator
+          <div className="flex items-center justify-between gap-2">
+            <h1 className="text-base sm:text-lg md:text-2xl font-bold text-gray-900 truncate">
+              <span className="hidden sm:inline">YouTube Mashup Generator</span>
+              <span className="sm:hidden">Mashup Generator</span>
             </h1>
-            <div className="flex gap-2">
+            <div className="flex gap-1.5 sm:gap-2 flex-shrink-0">
               <button
                 onClick={handleExportSegments}
                 disabled={segments.length === 0}
-                className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                className="px-2 sm:px-3 py-1.5 text-xs sm:text-sm bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
                 title="Export segments as JSON"
               >
                 Export
               </button>
-              <label className="px-3 py-1.5 text-sm bg-green-600 text-white rounded hover:bg-green-700 cursor-pointer transition-colors">
+              <label className="px-2 sm:px-3 py-1.5 text-xs sm:text-sm bg-green-600 text-white rounded hover:bg-green-700 cursor-pointer transition-colors whitespace-nowrap">
                 Import
                 <input
                   type="file"

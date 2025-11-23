@@ -124,14 +124,15 @@ export default function PreviewPlayer({
       </div>
 
       {/* Controls */}
-      <div className="space-y-4">
+      <div className="space-y-3">
         {/* Play All Button & Download */}
         <div className="flex gap-2">
           <button
             onClick={handlePlayAll}
-            className="flex-1 px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+            className="px-4 py-2 border-2 border-green-600 text-green-600 rounded-lg hover:bg-green-50 transition-colors font-medium text-sm"
           >
-            ▶ Play All Segments
+            <span className="hidden sm:inline">▶ Play All Segments</span>
+            <span className="sm:hidden">▶ Play All</span>
           </button>
           {downloadButton && (
             <div className="flex-shrink-0">

@@ -133,7 +133,7 @@ export default function SegmentCard({
             : hasErrors
             ? "border-red-300"
             : "border-gray-200"
-        } p-2 sm:p-3 cursor-pointer hover:shadow-sm min-w-[280px] sm:min-w-[380px]`}
+        } p-3 sm:p-4 cursor-pointer hover:shadow-sm w-full md:min-w-[380px] md:w-auto`}
         onClick={onClick}
       >
         {/* Header Row */}
@@ -199,77 +199,76 @@ export default function SegmentCard({
           </button>
         </div>
 
-        {/* Time Controls - Responsive Layout */}
-        <div className="flex items-center justify-between gap-1.5 sm:gap-2">
-          {/* Start Time - Left Side */}
-          <div className="flex items-center gap-0.5 sm:gap-1">
-            <span className="text-[10px] sm:text-xs text-blue-500 font-medium hidden sm:inline" title="Start time">Start</span>
+        {/* Time Controls - Stacked on Mobile, Row on Desktop */}
+        <div className="flex flex-col md:flex-row gap-2 md:gap-3">
+          {/* Start Time */}
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs text-gray-600 font-medium w-10">Start</span>
             <input
               type="text"
               value={localStartTime}
               onChange={(e) => handleStartTimeChange(e.target.value)}
               onClick={(e) => e.stopPropagation()}
               placeholder="00:00:00"
-              className="w-14 sm:w-16 px-0.5 sm:px-1 py-0.5 sm:py-1 text-[11px] sm:text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-400"
+              className="flex-1 md:w-20 px-2 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
-            <div className="flex flex-col gap-0">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  incrementTime('start');
-                }}
-                className="w-4 h-3 sm:w-5 sm:h-4 text-[9px] sm:text-[10px] bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-t flex items-center justify-center leading-none"
-                title="+1s"
-              >
-                +
-              </button>
+            <div className="flex gap-1">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   decrementTime('start');
                 }}
-                className="w-4 h-3 sm:w-5 sm:h-4 text-[9px] sm:text-[10px] bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-b flex items-center justify-center leading-none"
+                className="w-8 h-8 text-base bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded flex items-center justify-center"
                 title="-1s"
               >
-                -
+                −
               </button>
-            </div>
-          </div>
-
-          {/* End Time - Right Side */}
-          <div className="flex items-center gap-0.5 sm:gap-1">
-            <div className="flex flex-col gap-0">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  incrementTime('end');
+                  incrementTime('start');
                 }}
-                className="w-4 h-3 sm:w-5 sm:h-4 text-[9px] sm:text-[10px] bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-t flex items-center justify-center leading-none"
+                className="w-8 h-8 text-base bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded flex items-center justify-center"
                 title="+1s"
               >
                 +
               </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  decrementTime('end');
-                }}
-                className="w-4 h-3 sm:w-5 sm:h-4 text-[9px] sm:text-[10px] bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-b flex items-center justify-center leading-none"
-                title="-1s"
-              >
-                -
-              </button>
             </div>
+          </div>
 
+          {/* End Time */}
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs text-gray-600 font-medium w-10">End</span>
             <input
               type="text"
               value={localEndTime}
               onChange={(e) => handleEndTimeChange(e.target.value)}
               onClick={(e) => e.stopPropagation()}
               placeholder="00:01:00"
-              className="w-14 sm:w-16 px-0.5 sm:px-1 py-0.5 sm:py-1 text-[11px] sm:text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-400"
+              className="flex-1 md:w-20 px-2 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
-            <span className="text-[10px] sm:text-xs text-purple-500 font-medium hidden sm:inline" title="End time">End</span>
+            <div className="flex gap-1">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  decrementTime('end');
+                }}
+                className="w-8 h-8 text-base bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded flex items-center justify-center"
+                title="-1s"
+              >
+                −
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  incrementTime('end');
+                }}
+                className="w-8 h-8 text-base bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded flex items-center justify-center"
+                title="+1s"
+              >
+                +
+              </button>
+            </div>
           </div>
         </div>
 

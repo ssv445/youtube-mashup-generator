@@ -98,10 +98,10 @@ export default function GenerateButton({
         <button
           onClick={handleGenerate}
           disabled={!isValid || isGenerating || segments.length === 0}
-          className={`px-6 py-3 text-sm font-medium rounded-lg transition-all ${
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-all whitespace-nowrap border-2 ${
             isValid && !isGenerating
-              ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700"
-              : "bg-gray-300 text-gray-500 cursor-not-allowed"
+              ? "border-blue-600 text-blue-600 hover:bg-blue-50"
+              : "border-gray-300 text-gray-400 cursor-not-allowed"
           }`}
           title={!isValid ? validationErrors.join(', ') : 'Generate & Download'}
         >
@@ -123,10 +123,14 @@ export default function GenerateButton({
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 />
               </svg>
-              Generating...
+              <span className="hidden sm:inline">Generating...</span>
+              <span className="sm:hidden">Gen...</span>
             </span>
           ) : (
-            "🎵 Download"
+            <>
+              <span className="hidden sm:inline">🎵 Download</span>
+              <span className="sm:hidden">🎵 Down</span>
+            </>
           )}
         </button>
 
