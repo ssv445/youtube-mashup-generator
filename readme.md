@@ -1,14 +1,14 @@
-# YouTube Parody Song Generator 🎵
+# YouTube Mashup Generator 🎵
 
-A web application that lets you create parody songs by stitching together segments from multiple YouTube videos. Features real-time preview, drag-and-drop segment reordering, and audio-only output generation.
+A web application that lets you create audio mashups by stitching together segments from multiple YouTube videos. Features real-time preview, drag-and-drop segment reordering, and audio-only output generation.
 
 ## Features
 
 - 🎬 **Add YouTube Videos**: Paste URLs one at a time with thumbnail previews
 - ⏱️ **Precise Time Control**: Set start/end times manually or with visual controls
-- 👀 **Real-Time Preview**: Watch your parody come together using YouTube's player
+- 👀 **Real-Time Preview**: Watch your mashup come together using YouTube's player
 - 🔄 **Drag & Drop**: Easily reorder segments
-- 💾 **Multi-Project Support**: Save and manage multiple parody projects locally
+- 💾 **Multi-Project Support**: Save and manage multiple mashup projects locally
 - ✅ **Client-Side Validation**: Real-time validation ensures everything is correct
 - 🎵 **Audio Generation**: Generate and download audio-only files
 - 🐳 **Docker-Based**: FFmpeg and yt-dlp run in containers (no local installation needed)
@@ -86,7 +86,7 @@ npm run docker:logs
    - Click "Add" or press Enter
    - Set start and end times for each segment
 
-3. **Preview your parody**:
+3. **Preview your mashup**:
    - Click on any segment to preview it
    - Use "Play All Segments" to watch the full sequence
    - Segments auto-advance when they finish
@@ -196,7 +196,7 @@ docker compose ps
 - **Container**: MP4 (M4A)
 - **Audio Codec**: AAC
 - **Quality**: Extracted from 360p YouTube videos
-- **Filename**: `parody_[timestamp].m4a`
+- **Filename**: `mashup_[timestamp].m4a`
 
 ## Cleanup
 
@@ -220,7 +220,7 @@ rm -rf media/.youtube_cache/*
 - Fade transitions between segments
 - Volume adjustment per segment
 - User accounts with cloud storage
-- Share parodies via URL
+- Share mashups via URL
 
 ## Tech Stack
 
